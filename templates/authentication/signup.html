@@ -58,12 +58,16 @@
     document.getElementById("signup-form").addEventListener("submit", async function (e) {
       e.preventDefault();
       const form = e.target;
+      
+      if (form.password1.value !== form.password2.value) {
+        document.getElementById("error-msg").innerText = "비밀번호가 일치하지 않습니다.";
+        return;
+      }
 
       const payload = {
         username: form.username.value,
         email: form.email.value,
-        password1: form.password1.value,
-        password2: form.password2.value,
+        password: form.password1.value,
       };
 
       const res = await fetch("/api/auth/signup/", {
