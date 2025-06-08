@@ -1,0 +1,6 @@
+      PID    PPID    PGID     WINPID   TTY         UID    STIME COMMAND
+     6098       1    6098      26000  cons1     197609 16:27:10 /usr/bin/bash
+     6026       1    6026      32712  cons0     197609 14:59:50 /usr/bin/bash
+     6268    6098    6268      23268  cons1     197609 16:43:34 /usr/bin/PS
+     6091    6090    6090      11820  ?         197609 15:20:56 /c/Users/seemi/AppData/Local/Programs/Microsoft VS Code/Code
+     6090       1    6090      28640  ?         197609 15:20:56 /usr/bin/sh
