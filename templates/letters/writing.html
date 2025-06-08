@@ -1,56 +1,89 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Letter To Myself</title>
-    <link rel="stylesheet" href="{% static 'css/letters/writing.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Letter To Myself</title>
+  <link rel="stylesheet" href="/static/css/letters/writing.css">
 </head>
 <body>
-    <header style="position: relative; right: 35%;">
-        <h1>To. </h1>
-    </header>
-    <!-- 햄버거 버튼 -->
-    <div class="hamburger-btn">
-        <img src="{% static 'images/poststamp.png' %}" alt="우표스티커 UI" width="50px">
-    </div>
+  <header style="position: relative; right: 35%;">
+    <h1>To. </h1>
+  </header>
 
-    <!-- 메뉴 바깥을 클릭하면 닫힘 -->
-    <div class="page_cover"></div>
+  <!-- 햄버거 버튼 -->
+  <div class="hamburger-btn">
+    <img src="/static/images/poststamp.png" alt="우표스티커 UI" width="50px">
+  </div>
 
-     <!-- 사이드 메뉴 -->
-<div id="menu">
+  <div class="page_cover"></div>
+
+  <!-- 사이드 메뉴 -->
+  <div id="menu">
     <ul class="nav">
-        <li><a href="{% url 'letters:writing' %}">편지 쓰기</a></li>
-        <li><a href="{% url 'letters:letter_list' %}">편지 목록</a></li>
-        <li><a href="{% url 'routines:save_routine' %}">편지 루틴</a></li>
-        {% if user.is_authenticated %}
-            <li><a href="{% url 'authentication:mypage' %}">마이페이지</a></li>
-            <li><a href="{% url 'authentication:logout' %}">{{ user.username }} (로그아웃)</a></li>
-        {% else %}
-            <li><a href="{% url 'authentication:login' %}">로그인</a></li>
-        {% endif %}
-
-        <li><a href="{% url 'authentication:signup' %}">회원가입</a></li>
+      <li><a href="/letters/writing/">편지 쓰기</a></li>
+      <li><a href="/letters/letter/">편지 목록</a></li>
+      <li><a href="/routines/">편지 루틴</a></li>
+      <li><a href="/auth/mypage/">마이페이지</a></li>
+      <li><a href="/auth/logout/">로그아웃</a></li>
+      <li><a href="/auth/signup/">회원가입</a></li>
     </ul>
-</div>
+  </div>
 
+  <!-- 편지 작성 폼 -->
+  <form id="letterForm" enctype="multipart/form-data">
+    <label for="title">제목:</label>
+    <input type="text" id="title" name="title" required>
 
+    <label for="content">내용:</label>
+    <textarea id="content" name="content" rows="10" required></textarea>
 
+    <label for="category">카테고리:</label>
+    <select id="category" name="category" required>
+      <option value="past">과거</option>
+      <option value="today">오늘</option>
+      <option value="future">미래</option>
+    </select>
 
-    <form method="POST", enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}  <!-- Django 폼 자동 렌더링 -->
-        
-        <button type="submit">작성 완료</button>
-    </form>
-    
+    <label for="open_date">열람일자:</label>
+    <input type="date" id="open_date" name="open_date">
 
-    <footer>
-        <p>&copy; 2024 A Letter To Myself</p>
-    </footer>
-    <!-- JavaScript 연결 -->
-    <script src="{% static 'js/script.js' %}"></script>
+    <label for="image">이미지 첨부:</label>
+    <input type="file" id="image" name="image">
+
+    <button type="submit">작성 완료</button>
+  </form>
+
+  <footer>
+    <p>&copy; 2024 A Letter To Myself</p>
+  </footer>
+
+  <script src="/static/js/script.js"></script>
+  <script>
+    document.getElementById('letterForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('/api/letters/', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          alert('편지가 성공적으로 작성되었습니다!');
+          window.location.href = '/letters/letter/';
+        } else {
+          const error = await response.json();
+          alert('오류 발생: ' + (error.detail || '서버 오류'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('네트워크 오류');
+      }
+    });
+  </script>
 </body>
 </html>
