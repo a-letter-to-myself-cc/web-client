@@ -67,7 +67,7 @@
       const formData = new FormData(form);
 
       try {
-        const response = await fetch('/api/letters/', {
+        const response = await fetch('/api/letters/write/', {
           method: 'POST',
           body: formData,
         });

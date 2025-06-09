@@ -60,7 +60,7 @@ function openLetter(letterId) {
 
         console.log("✅ Fetching letter with ID:", letterId);
 
-        fetch(`/letters/${letterId}/`)
+        fetch(`/api/letters/${letterId}/`)
             .then(response => response.json())
             .then(letter => {
                 console.log("✅ 받은 데이터:", letter);  // 🔥 JSON 데이터 콘솔 출력

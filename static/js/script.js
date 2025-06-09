@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                fetch(`/letters/${letterId}/delete/`, { // ✅ API URL이 정확한지 확인하세요.
+                fetch(`/api/letters/delete/${letterId}/`, { // ✅ API URL이 정확한지 확인하세요.
                     method: 'DELETE',
                     headers: {
                         'X-CSRFToken': csrfToken,
