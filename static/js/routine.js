@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     routineForm?.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch("api/routines/", {
+            const res = await fetch("/api/routines/", {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": csrfToken,
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 🎉 기념일 저장
     specialForm?.addEventListener("submit", (e) => {
         e.preventDefault();
-        fetch("api/routines/", {
+        fetch("/api/routines/", {
             method: "POST",
             headers: {
                 "X-CSRFToken": csrfToken,
