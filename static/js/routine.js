@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return cookieValue;
     }
 
+    const accessToken = getCookie("access_token");
+
     //Django CSRF 보호를 통과하려면 필요
     const csrfToken = getCookie("csrftoken");
 
@@ -29,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": csrfToken,
+                    "Authorization": `Bearer ${accessToken}`,
                 },
                 credentials: "include",  // 쿠키 사용하려면 반드시 추가
                 body: new FormData(routineForm)
@@ -55,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
             method: "POST",
             headers: {
                 "X-CSRFToken": csrfToken,
+                "Authorization": `Bearer ${accessToken}`,
             },
             credentials: "include", //쿠키 사용하려면 반드시 추가
             body: new FormData(specialForm)
