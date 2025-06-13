@@ -58,7 +58,6 @@
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ username, password }),
-        credentials: "include" // ✅ 이거 없으면 쿠키 안 저장됨
       });
 
       const data = await res.json();

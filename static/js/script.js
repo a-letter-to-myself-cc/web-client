@@ -86,6 +86,28 @@ function add_routine(){
 function add_specialDay(){
     alert("기념일이 저장되었습니다!")
 }
+
+function fetchWithAuth(url, options = {}) {
+    const token = localStorage.getItem("access");
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        throw new Error("No access token found");
+    }
+
+    const defaultHeaders = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    // headers가 이미 있으면 병합, 아니면 새로 만들기
+    options.headers = {
+        ...defaultHeaders,
+        ...(options.headers || {})
+    };
+
+    return fetch(url, options);
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const tabs = document.querySelectorAll(".tabs li");
     const tabContents = document.querySelectorAll("[data-tab-content]");
@@ -152,12 +174,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                fetch(`/api/letters/delete/${letterId}/`, { // ✅ API URL이 정확한지 확인하세요.
+                fetchWithAuth(`/api/letters/delete/${letterId}/`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRFToken': csrfToken,
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json' // 서버가 JSON 응답을 보내도록 요청
+                        'Accept': 'application/json'
                     }
                 })
                 .then(response => {

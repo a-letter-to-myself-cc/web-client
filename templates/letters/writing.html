@@ -60,30 +60,51 @@
 
   <script src="/static/js/script.js"></script>
   <script>
-    document.getElementById('letterForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
+  document.getElementById('letterForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-      const form = e.target;
-      const formData = new FormData(form);
+    const form = e.target;
+    const formData = new FormData(form);
 
-      try {
-        const response = await fetch('/api/letters/write/', {
-          method: 'POST',
-          body: formData,
-        });
+    try {
+      const response = await fetchWithAuth('/api/letters/write/', {
+        method: 'POST',
+        body: formData
+      });
 
-        if (response.ok) {
-          alert('편지가 성공적으로 작성되었습니다!');
-          window.location.href = '/letters/letter/';
-        } else {
-          const error = await response.json();
-          alert('오류 발생: ' + (error.detail || '서버 오류'));
-        }
-      } catch (err) {
-        console.error(err);
-        alert('네트워크 오류');
+      if (response.ok) {
+        alert('편지가 성공적으로 작성되었습니다!');
+        window.location.href = '/letters/letter/';
+      } else {
+        const error = await response.json();
+        alert('오류 발생: ' + (error.detail || '서버 오류'));
       }
-    });
-  </script>
+    } catch (err) {
+      console.error(err);
+      alert('네트워크 오류');
+    }
+  });
+
+
+  function fetchWithAuth(url, options = {}) {
+    const token = localStorage.getItem("access");
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        throw new Error("No access token found");
+    }
+
+    const defaultHeaders = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    options.headers = {
+        ...defaultHeaders,
+        ...(options.headers || {})
+    };
+
+    return fetch(url, options);
+}
+</script>
+
 </body>
 </html>

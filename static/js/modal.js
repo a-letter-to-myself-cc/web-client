@@ -60,35 +60,43 @@ function openLetter(letterId) {
 
         console.log("✅ Fetching letter with ID:", letterId);
 
-        fetch(`/api/letters/${letterId}/`)
-            .then(response => response.json())
-            .then(letter => {
-                console.log("✅ 받은 데이터:", letter);  // 🔥 JSON 데이터 콘솔 출력
+        const accessToken = localStorage.getItem("access");  // ✅ 토큰 가져오기
 
-                document.getElementById("modalTitle").textContent = letter.title;
-                document.getElementById("modalDate").textContent = "📅 " + letter.letter_date;
-                document.getElementById("modalContent").textContent = letter.content;
-                document.getElementById("modalImageUrl").src = letter.image_url || '';
+        fetchWithAuth(`/api/letters/${letterId}/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })  // ❗ 여기에 괄호 닫아야 함!!!
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`서버 오류 발생: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(letter => {
+            console.log("✅ 받은 데이터:", letter);
 
-                // ✅ 모달창 표시 확인
-                let overlay = document.getElementById("modalOverlay");
-                let modal = document.getElementById("letterModal");
+            document.getElementById("modalTitle").textContent = letter.title;
+            document.getElementById("modalDate").textContent = "📅 " + letter.letter_date;
+            document.getElementById("modalContent").textContent = letter.content;
+            document.getElementById("modalImageUrl").src = letter.image_url || '';
 
-                overlay.style.display = "block";
-                modal.style.display = "block";
+            let overlay = document.getElementById("modalOverlay");
+            let modal = document.getElementById("letterModal");
 
-                console.log("✅ 모달창 표시됨:", overlay.style.display, modal.style.display);
-            })
-            .catch(error => {
-                console.error("❌ 데이터 로딩 실패:", error);
-            });
+            overlay.style.display = "block";
+            modal.style.display = "block";
+
+            console.log("✅ 모달창 표시됨:", overlay.style.display, modal.style.display);
+        })
+        .catch(error => {
+            console.error("❌ 데이터 로딩 실패:", error);
+        });
+
     } catch (error) {
         console.error("🚨 에러 발생:", error);
     }
-}
-
-
-function closeModal() {
-    document.getElementById("modalOverlay").style.display = "none";
-    document.getElementById("letterModal").style.display = "none";
 }

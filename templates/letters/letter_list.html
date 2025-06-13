@@ -94,7 +94,7 @@
     // 편지 목록 불러오기 (API 예시 URL은 /api/letters)
     async function fetchLetters() {
       try {
-        const res = await fetch('/api/letters/');
+        const res = await fetchWithAuth('/api/letters/');;
         const letters = await res.json();
 
         const pastList = document.getElementById('pastList');
